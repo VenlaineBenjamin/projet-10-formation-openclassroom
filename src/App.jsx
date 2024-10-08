@@ -21,23 +21,23 @@ function Layout() {
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Layout />, // Layout qui inclut NavBar, Outlet et Footer
+        element: <Layout />,
         children: [
             {
                 path: "/",
-                element: <HeroHeader />, // Affiche HeroHeader à la racine "/"
+                element: <HeroHeader />,
             },
             {
                 path: "login",
-                element: <Login />, // Affiche Login à "/login"
+                element: <Login />,
             },
             {
                 path: "user",
-                element: <User />, // Affiche User à "/user"
+                element: <User />,
             },
             {
                 path: "*",
-                element: <PageError />, // Affiche PageError pour toutes les autres routes
+                element: <PageError />,
             },
         ],
     },
