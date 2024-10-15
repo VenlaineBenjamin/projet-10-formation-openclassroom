@@ -9,7 +9,10 @@ export const loginUser = createAsyncThunk(
                 "http://localhost:3001/api/v1/user/login",
                 { email, password }
             );
-            return response.data;
+            const { token, ...userData } = response.data.body;
+            console.log("Réponse de l'API:", token);
+            localStorage.setItem("token", token);
+            return { token, userData };
         } catch (error) {
             return rejectWithValue(error.response.data);
         }
@@ -22,10 +25,13 @@ const authSlice = createSlice({
         loading: false,
         userInfo: null,
         error: null,
+        token: localStorage.getItem("token") || null,
     },
     reducers: {
         logoutUser: (state) => {
             state.userInfo = null;
+            state.token = null;
+            localStorage.removeItem("token");
         },
     },
     extraReducers: (builder) => {
@@ -35,8 +41,10 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.userInfo = action.payload;
+                state.userInfo = action.payload.userData;
+                state.token = action.payload.token;
                 state.error = null;
+                localStorage.setItem("token", action.payload.token);
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;

@@ -1,6 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import Profile from "../../components/Porfile";
 import { logoutUser } from "../../features/auth/authSlice";
+import { fetchUserProfile } from "../../features/user/userSlice";
 import "./NavBar.css";
 
 export default function NavBar() {
@@ -9,6 +11,7 @@ export default function NavBar() {
 
     const handleLogout = () => {
         dispatch(logoutUser());
+        dispatch(fetchUserProfile());
     };
 
     return (
@@ -18,7 +21,6 @@ export default function NavBar() {
                     className="main-nav-logo-image"
                     src="src/assets/img/argentBankLogo.png"
                     alt="Argent Bank Logo"
-                    onClick={handleLogout}
                 />
                 <h1 className="sr-only">Argent Bank</h1>
             </Link>
@@ -29,14 +31,19 @@ export default function NavBar() {
                         Sign In
                     </Link>
                 ) : (
-                    <Link
-                        className="main-nav-item"
-                        to="/"
-                        onClick={handleLogout}
-                    >
-                        <i className="fa-solid fa-right-from-bracket"></i>
-                        Sign Out
-                    </Link>
+                    <div className="main-nav">
+                        <Link to="/user">
+                            <Profile />
+                        </Link>
+                        <Link
+                            className="main-nav-item"
+                            to="/login"
+                            onClick={handleLogout}
+                        >
+                            <i className="fa-solid fa-right-from-bracket"></i>
+                            Sign Out
+                        </Link>
+                    </div>
                 )}
             </div>
         </nav>

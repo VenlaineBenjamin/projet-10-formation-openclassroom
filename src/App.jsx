@@ -6,15 +6,14 @@ import NavBar from "./page/NavBar/NavBar";
 import PageError from "./page/PageError/PageError";
 import User from "./page/User/User";
 
-// Layout qui contient le NavBar et Footer, et l'Outlet pour les enfants
 function Layout() {
     return (
-        <body>
+        <>
             <NavBar />
             <Outlet />{" "}
             {/* C'est ici que le contenu des routes enfants sera rendu */}
             <Footer />
-        </body>
+        </>
     );
 }
 

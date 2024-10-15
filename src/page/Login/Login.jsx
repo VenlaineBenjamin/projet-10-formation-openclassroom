@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../features/auth/authSlice";
@@ -7,39 +7,24 @@ import "./Login.css";
 export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [usernameError, setUsernameError] = useState("");
-    const [passwordError, setPasswordError] = useState("");
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { loading, error, userInfo } = useSelector((state) => state.auth);
 
-    const handleSignIn = (e) => {
+    const { loading, error } = useSelector((state) => state.auth);
+
+    const handleSignIn = async (e) => {
         e.preventDefault();
-        dispatch(loginUser({ email: username, password }));
-    };
+        const resultAction = await dispatch(
+            loginUser({ email: username, password })
+        );
 
-    useEffect(() => {
-        if (userInfo) {
+        if (loginUser.fulfilled.match(resultAction)) {
             navigate("/user");
+        } else {
+            console.error("Login failed:", resultAction.payload);
         }
-        if (error) {
-            // Assuming error is a string identifying which field is incorrect
-            if (error.includes("email")) {
-                setUsernameError(error);
-                setTimeout(
-                    () =>
-                        setUsernameError(
-                            "Ceci n'est pas la bonne adresse email"
-                        ),
-                    5000
-                );
-            }
-            if (error.includes("password")) {
-                setPasswordError(error);
-                setTimeout(() => setPasswordError(""), 5000);
-            }
-        }
-    }, [userInfo, error, navigate]);
+    };
 
     return (
         <main className="main bg-dark">
@@ -55,9 +40,6 @@ export default function Login() {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                         />
-                        {usernameError && (
-                            <p className="error">{usernameError}</p>
-                        )}
                     </div>
                     <div className="input-wrapper">
                         <label htmlFor="password">Mot de passe</label>
@@ -67,16 +49,19 @@ export default function Login() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
-                        {passwordError && (
-                            <p className="error">{passwordError}</p>
-                        )}
                     </div>
                     {loading && <p>Chargement...</p>}
+                    {error && <p className="error-message">{error}</p>}{" "}
+                    {/* Affichage des erreurs si nécessaire */}
                     <div className="input-remember">
                         <input type="checkbox" id="remember-me" />
                         <label htmlFor="remember-me">Se souvenir de moi</label>
                     </div>
-                    <button type="submit" className="sign-in-button">
+                    <button
+                        type="submit"
+                        className="sign-in-button"
+                        disabled={loading}
+                    >
                         Connexion
                     </button>
                 </form>

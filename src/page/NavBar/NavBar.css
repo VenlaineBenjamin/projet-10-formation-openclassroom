@@ -1,5 +1,6 @@
 .main-nav {
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
     align-items: center;
     padding: 5px 20px;
@@ -8,6 +9,11 @@
 .main-nav a {
     font-weight: bold;
     color: #2c3e50;
+    cursor: pointer;
+}
+
+i {
+    margin-right: 0.5rem;
 }
 
 .main-nav a.router-link-exact-active {
@@ -31,4 +37,8 @@
 .main-nav-logo-image {
     max-width: 100%;
     width: 200px;
+}
+
+.profile-link {
+    text-decoration: none;
 }
