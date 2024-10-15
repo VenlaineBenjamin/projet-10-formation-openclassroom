@@ -86,7 +86,7 @@ const userSlice = createSlice({
     name: "user",
     initialState: {
         loading: false,
-        userName: "",
+        userName: localStorage.getItem("userName"),
         firstName: "",
         lastName: "",
         error: null,
@@ -115,6 +115,7 @@ const userSlice = createSlice({
             .addCase(updateUserProfile.fulfilled, (state, action) => {
                 state.loading = false;
                 state.userName = action.payload.userName;
+                localStorage.setItem("userName", action.payload.userName);
             })
             .addCase(updateUserProfile.rejected, (state, action) => {
                 state.loading = false;

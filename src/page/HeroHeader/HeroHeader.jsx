@@ -6,12 +6,12 @@ export default function HeroHeader() {
             <div className="hero">
                 <section className="hero-content">
                     <h2 className="sr-only">Promoted Content</h2>
-                    <p className="subtitle">No fees.</p>
-                    <p className="subtitle">No minimum deposit.</p>
-                    <p className="subtitle">High interest rates.</p>
-                    <p className="text">
+                    <h3 className="subtitle">No fees.</h3>
+                    <h3 className="subtitle">No minimum deposit.</h3>
+                    <h3 className="subtitle">High interest rates.</h3>
+                    <h3 className="text">
                         Open a savings account with Argent Bank today!
-                    </p>
+                    </h3>
                 </section>
             </div>
             <section className="features">
@@ -34,7 +34,7 @@ export default function HeroHeader() {
                 <div className="feature-item">
                     <img
                         src="src/assets/img/icon-money.png"
-                        alt="Chat Icon"
+                        alt="Money Icon"
                         className="feature-icon"
                     />
                     <h3 className="feature-item-title">
@@ -48,7 +48,7 @@ export default function HeroHeader() {
                 <div className="feature-item">
                     <img
                         src="src/assets/img/icon-security.png"
-                        alt="Chat Icon"
+                        alt="shield Icon"
                         className="feature-icon"
                     />
                     <h3 className="feature-item-title">

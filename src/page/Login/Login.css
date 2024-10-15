@@ -10,6 +10,10 @@
     color: #fff;
 }
 
+.sign-in-button:hover {
+    background-color: #00a86b;
+}
+
 .sign-in-content {
     box-sizing: border-box;
     background-color: white;

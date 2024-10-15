@@ -95,6 +95,10 @@ button {
     color: #fff;
 }
 
+.transaction-button:hover {
+    background-color: #00a86b;
+}
+
 .input-label {
     font-size: 1rem;
     font-weight: normal;
