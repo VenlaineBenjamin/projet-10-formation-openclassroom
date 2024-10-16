@@ -7,22 +7,34 @@ import "./Login.css";
 export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [emailError, setEmailError] = useState("");
+    const [passwordError, setPasswordError] = useState("");
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const { loading, error } = useSelector((state) => state.auth);
+    const { loading } = useSelector((state) => state.auth);
 
     const handleSignIn = async (e) => {
         e.preventDefault();
-        const resultAction = await dispatch(
-            loginUser({ email: username, password })
-        );
+        try {
+            const resultAction = await dispatch(
+                loginUser({ email: username, password })
+            );
 
-        if (loginUser.fulfilled.match(resultAction)) {
-            navigate("/user");
-        } else {
-            console.error("Login failed:", resultAction.payload);
+            if (loginUser.fulfilled.match(resultAction)) {
+                navigate("/user");
+            } else {
+                const errorData = resultAction.payload.data;
+                if (errorData.email) {
+                    setEmailError(errorData.email);
+                }
+                if (errorData.password) {
+                    setPasswordError(errorData.password);
+                }
+            }
+        } catch (error) {
+            console.error("Login failed:", error);
         }
     };
 
@@ -40,6 +52,9 @@ export default function Login() {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                         />
+                        {emailError && (
+                            <p className="error-message">{emailError}</p>
+                        )}
                     </div>
                     <div className="input-wrapper">
                         <label htmlFor="password">Mot de passe</label>
@@ -49,10 +64,11 @@ export default function Login() {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                         />
+                        {passwordError && (
+                            <p className="error-message">{passwordError}</p>
+                        )}
                     </div>
                     {loading && <p>Chargement...</p>}
-                    {error && <p className="error-message">{error}</p>}{" "}
-                    {/* Affichage des erreurs si nécessaire */}
                     <div className="input-remember">
                         <input type="checkbox" id="remember-me" />
                         <label htmlFor="remember-me">Se souvenir de moi</label>

@@ -1,0 +1,20 @@
+.info {
+    background-color: #ffffff;
+    width: 80%;
+    margin: auto;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+}
+
+.info-container {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    color: black;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}

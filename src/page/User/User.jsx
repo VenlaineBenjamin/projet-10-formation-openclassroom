@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Transaction from "../../components/transaction/Transaction";
 import { updateUserProfile } from "../../features/user/userSlice";
 import "./User.css";
 
@@ -10,6 +11,9 @@ export default function User() {
     );
     const [useEdite, setUseEdite] = useState(false);
     const [newUserName, setNewUserName] = useState(userName);
+
+    // État unique pour garder la trace de la transaction visible
+    const [activeTransaction, setActiveTransaction] = useState(null);
 
     useEffect(() => {
         setNewUserName(userName);
@@ -36,10 +40,17 @@ export default function User() {
         setUseEdite(false);
     };
 
+    // Fonction pour afficher ou masquer une transaction
+    const toggleTransactionVisibility = (account) => {
+        setActiveTransaction((prevState) =>
+            prevState === account ? null : account
+        );
+    };
+
     return (
         <>
             <main className="main bg-dark">
-                <div className="header">
+                <header className="header">
                     <h1>
                         Welcome back <br />
                         {useEdite ? (
@@ -105,7 +116,8 @@ export default function User() {
                             Edit Username
                         </button>
                     )}
-                </div>
+                </header>
+
                 <h2 className="sr-only">Accounts</h2>
                 <section className="account">
                     <div className="account-content-wrapper">
@@ -118,11 +130,19 @@ export default function User() {
                         </p>
                     </div>
                     <div className="account-content-wrapper cta">
-                        <button className="transaction-button">
-                            View transactions
+                        <button
+                            className="transaction-button"
+                            onClick={() =>
+                                toggleTransactionVisibility("checking")
+                            }
+                        >
+                            {activeTransaction === "checking"
+                                ? "Close panel"
+                                : "View transactions"}
                         </button>
                     </div>
                 </section>
+                {activeTransaction === "checking" && <Transaction />}
                 <section className="account">
                     <div className="account-content-wrapper">
                         <h3 className="account-title">
@@ -134,11 +154,19 @@ export default function User() {
                         </p>
                     </div>
                     <div className="account-content-wrapper cta">
-                        <button className="transaction-button">
-                            View transactions
+                        <button
+                            className="transaction-button"
+                            onClick={() =>
+                                toggleTransactionVisibility("savings")
+                            }
+                        >
+                            {activeTransaction === "savings"
+                                ? "Close panel"
+                                : "View transactions"}
                         </button>
                     </div>
                 </section>
+                {activeTransaction === "savings" && <Transaction />}
                 <section className="account">
                     <div className="account-content-wrapper">
                         <h3 className="account-title">
@@ -150,11 +178,19 @@ export default function User() {
                         </p>
                     </div>
                     <div className="account-content-wrapper cta">
-                        <button className="transaction-button">
-                            View transactions
+                        <button
+                            className="transaction-button"
+                            onClick={() =>
+                                toggleTransactionVisibility("credit")
+                            }
+                        >
+                            {activeTransaction === "credit"
+                                ? "close panel"
+                                : "View transactions"}
                         </button>
                     </div>
                 </section>
+                {activeTransaction === "credit" && <Transaction />}
             </main>
         </>
     );
