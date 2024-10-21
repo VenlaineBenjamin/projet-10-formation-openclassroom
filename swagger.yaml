@@ -1,0 +1,235 @@
+swagger: "2.0"
+info:
+    title: Bank Argent Frontend API documentation
+    description: Contient la documentation de l'API du frontend de Bank Argent
+    version: "1.0.0"
+    termsOfService: "http://swagger.io/terms/"
+host: "localhost:3001"
+basePath: "/api/v1/user"
+schemes:
+    - "http"
+paths:
+    /account:
+        security:
+            - Bearer: []
+        get:
+            tags:
+                - account
+            summary: get account information
+            description: Récupère les informations destransactions     d'un utilisateur connecté
+            parametre:
+                - name: body
+                  in: body
+                  description: login payload
+                  required: true
+                  schema:
+                      type: object
+                      properties:
+                          id:
+                              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: object
+                        properties:
+                            id:
+                                type: string
+                            balance:
+                                type: number
+                            transactions:
+                                type: array
+                                items:
+                                    type: object
+                                    properties:
+                                        id:
+                                            type: string
+                                        amount:
+                                            type: number
+                                        description:
+                                            type: string
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+    /transaction/{id}:
+        security:
+            - Bearer: []
+        get:
+            tags:
+                - transaction
+            summary: get transaction information
+            description: Récupère les informations destransactions d'un utilisateur connecté
+            parametre:
+                - name: body
+                  in: body
+                  description: login payload
+                  required: true
+                  schema:
+                      type: object
+                      properties:
+                          id:
+                              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: object
+                        properties:
+                            id:
+                                type: string
+                            amount:
+                                type: number
+                            description:
+                                type: string
+                            date:
+                                type: string
+                            balance:
+                                type: number
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+        put:
+            tags:
+                - transaction
+            summary: create transaction
+            description: Crée une transaction pour un utilisateur connecté
+            parametre:
+                - name: body
+                  in: body
+                  description: login payload
+                  required: true
+                  schema:
+                      type: object
+                      properties:
+                          amount:
+                              type: number
+                          description:
+                              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: object
+                        properties:
+                            id:
+                                type: string
+                            amount:
+                                type: number
+                            description:
+                                type: string
+                            date:
+                                type: string
+                            balance:
+                                type: number
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+    /transaction/category/{id}:
+        security:
+            - Bearer: []
+        get:
+            tags:
+                - transaction
+            summary: get transaction categories
+            description: Récupère les catégories de transactions
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: array
+                        items:
+                            type: string
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+        put:
+            tags:
+                - transaction
+            summary: create transaction category
+            description: Crée une catégorie de transaction
+            parametre:
+                - name: body
+                  in: body
+                  description: login payload
+                  required: true
+                  schema:
+                      type: object
+                      properties:
+                          category:
+                              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: object
+                        properties:
+                            category:
+                                type: string
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+    /transaction/note/{id}:
+        security:
+            - Bearer: []
+        get:
+            tags:
+                - transaction
+            summary: get transaction notes
+            description: Récupère les notes de transactions
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: array
+                        items:
+                            type: string
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+        put:
+            tags:
+                - transaction
+            summary: create transaction note
+            description: Crée une note de transaction
+            parametre:
+                - name: body
+                  in: body
+                  description: login payload
+                  required: true
+                  schema:
+                      type: object
+                      properties:
+                          note:
+                              type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: object
+                        properties:
+                            note:
+                                type: string
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
