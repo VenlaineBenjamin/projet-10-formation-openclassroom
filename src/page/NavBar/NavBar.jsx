@@ -1,17 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Profile from "../../components/profile/Porfile";
 import { logoutUser } from "../../features/auth/authSlice";
-import { fetchUserProfile } from "../../features/user/userSlice";
 import "./NavBar.css";
 
 export default function NavBar() {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const { userInfo } = useSelector((state) => state.auth);
 
     const handleLogout = () => {
         dispatch(logoutUser());
-        dispatch(fetchUserProfile());
+        navigate("/login");
     };
 
     return (
@@ -34,14 +34,14 @@ export default function NavBar() {
                     <div className="main-nav">
                         <Profile />{" "}
                         {/* Plus besoin de <Link> autour de Profile */}
-                        <Link
-                            className="main-nav-item"
+                        <button
+                            className="main-nav-item no-style-button"
                             to="/login"
                             onClick={handleLogout}
                         >
                             <i className="fa-solid fa-right-from-bracket"></i>
                             Sign Out
-                        </Link>
+                        </button>
                     </div>
                 )}
             </div>

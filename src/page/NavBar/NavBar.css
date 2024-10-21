@@ -23,6 +23,7 @@ i {
 .main-nav-item {
     text-decoration: none;
     margin-right: 0.9rem;
+    font-weight: bold;
 }
 
 .main-nav-item:hover {
@@ -42,4 +43,14 @@ i {
 .profile-link {
     text-decoration: none;
     font-weight: bold;
+}
+
+.no-style-button {
+    background: none;
+    border: none;
+    color: inherit;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    text-align: left;
 }

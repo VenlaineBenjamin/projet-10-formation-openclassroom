@@ -1,4 +1,5 @@
 import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
+import PrivateRoute from "./features/privateRoute/privateRoute";
 import Footer from "./page/Footer/Footer";
 import HeroHeader from "./page/HeroHeader/HeroHeader";
 import Login from "./page/Login/Login";
@@ -32,7 +33,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "user",
-                element: <User />,
+                element: (
+                    <PrivateRoute>
+                        <User />
+                    </PrivateRoute>
+                ),
             },
             {
                 path: "*",

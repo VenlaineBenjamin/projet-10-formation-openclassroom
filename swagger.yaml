@@ -1,32 +1,112 @@
 swagger: "2.0"
 info:
-    title: Bank Argent Frontend API documentation
-    description: Contient la documentation de l'API du frontend de Bank Argent
+    title: Bank Argent API documentation
+    description: Contient toute la documentation de l'API du frontend de Bank Argent
     version: "1.0.0"
     termsOfService: "http://swagger.io/terms/"
 host: "localhost:3001"
-basePath: "/api/v1/user"
+basePath: "/api/v1"
 schemes:
     - "http"
 paths:
-    /account:
-        security:
-            - Bearer: []
-        get:
+    /user/login:
+        post:
             tags:
-                - account
-            summary: get account information
-            description: Récupère les informations destransactions     d'un utilisateur connecté
-            parametre:
-                - name: body
-                  in: body
-                  description: login payload
+                - User Module
+            summary: Login
+            description: API for Login
+            parameters:
+                - in: body
+                  name: body
+                  description: Login Payload
                   required: true
                   schema:
-                      type: object
-                      properties:
-                          id:
-                              type: string
+                      $ref: "#/definitions/Login"
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Login Successfully
+                    schema:
+                        $ref: "#/definitions/LoginResponse"
+                "400":
+                    description: Invalid Fields
+                "500":
+                    description: Internal Server Error
+    /user/signup:
+        post:
+            tags:
+                - User Module
+            summary: Signup
+            description: API for Signup
+            parameters:
+                - in: body
+                  name: body
+                  description: Signup Payload
+                  required: true
+                  schema:
+                      $ref: "#/definitions/User"
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Signup Successfully
+                    schema:
+                        $ref: "#/definitions/ApiResponse"
+                "400":
+                    description: Invalid Fields
+                "500":
+                    description: Internal Server Error
+    /user/profile:
+        get:
+            security:
+                - Bearer: []
+            tags:
+                - User Module
+            summary: User Profile API
+            description: API for fetching a user profile
+            responses:
+                "200":
+                    description: User profile retrieved successfully
+                    schema:
+                        $ref: "#/definitions/ApiResponse"
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+        put:
+            security:
+                - Bearer: []
+            tags:
+                - User Module
+            summary: User Profile API
+            description: API for updating a user profile
+            parameters:
+                - in: body
+                  name: body
+                  description: Update user profile attributes
+                  required: true
+                  schema:
+                      $ref: "#/definitions/UserProfile"
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: User profile updated successfully
+                    schema:
+                        $ref: "#/definitions/ApiResponse"
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+    /account:
+        get:
+            security:
+                - Bearer: []
+            tags:
+                - Account
+            summary: Get account information
+            description: Récupère les informations des transactions d'un utilisateur connecté
             produces:
                 - application/json
             responses:
@@ -37,8 +117,10 @@ paths:
                         properties:
                             id:
                                 type: string
+                                example: "12345"
                             balance:
                                 type: number
+                                example: 1000.50
                             transactions:
                                 type: array
                                 items:
@@ -46,101 +128,25 @@ paths:
                                     properties:
                                         id:
                                             type: string
+                                            example: "tx123"
                                         amount:
                                             type: number
+                                            example: 50.00
                                         description:
                                             type: string
+                                            example: "Grocery Shopping"
                 "401":
                     description: Unauthorized
                 "500":
                     description: Internal Server Error
-    /transaction/{id}:
-        security:
-            - Bearer: []
+    /transaction:
         get:
+            security:
+                - Bearer: []
             tags:
-                - transaction
-            summary: get transaction information
-            description: Récupère les informations destransactions d'un utilisateur connecté
-            parametre:
-                - name: body
-                  in: body
-                  description: login payload
-                  required: true
-                  schema:
-                      type: object
-                      properties:
-                          id:
-                              type: string
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: OK
-                    schema:
-                        type: object
-                        properties:
-                            id:
-                                type: string
-                            amount:
-                                type: number
-                            description:
-                                type: string
-                            date:
-                                type: string
-                            balance:
-                                type: number
-                "401":
-                    description: Unauthorized
-                "500":
-                    description: Internal Server Error
-        put:
-            tags:
-                - transaction
-            summary: create transaction
-            description: Crée une transaction pour un utilisateur connecté
-            parametre:
-                - name: body
-                  in: body
-                  description: login payload
-                  required: true
-                  schema:
-                      type: object
-                      properties:
-                          amount:
-                              type: number
-                          description:
-                              type: string
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: OK
-                    schema:
-                        type: object
-                        properties:
-                            id:
-                                type: string
-                            amount:
-                                type: number
-                            description:
-                                type: string
-                            date:
-                                type: string
-                            balance:
-                                type: number
-                "401":
-                    description: Unauthorized
-                "500":
-                    description: Internal Server Error
-    /transaction/category/{id}:
-        security:
-            - Bearer: []
-        get:
-            tags:
-                - transaction
-            summary: get transaction categories
-            description: Récupère les catégories de transactions
+                - Transaction
+            summary: Get all transactions
+            description: Récupère toutes les transactions d'un utilisateur connecté
             produces:
                 - application/json
             responses:
@@ -149,87 +155,228 @@ paths:
                     schema:
                         type: array
                         items:
-                            type: string
+                            type: object
+                            properties:
+                                id:
+                                    type: string
+                                    example: "tx123"
+                                amount:
+                                    type: number
+                                    example: 50.00
+                                description:
+                                    type: string
+                                    example: "Grocery Shopping"
+                                date:
+                                    type: string
+                                    example: "2024-10-21"
+                                balance:
+                                    type: number
+                                    example: 950.50
                 "401":
                     description: Unauthorized
                 "500":
                     description: Internal Server Error
-        put:
+    /transaction/{id}:
+        get:
+            security:
+                - Bearer: []
             tags:
-                - transaction
-            summary: create transaction category
-            description: Crée une catégorie de transaction
-            parametre:
-                - name: body
-                  in: body
-                  description: login payload
+                - Transaction
+            summary: Get transaction information
+            description: Récupère les informations d'une transaction d'un utilisateur connecté
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: OK
+                    schema:
+                        type: object
+                        properties:
+                            id:
+                                type: string
+                                example: "tx123"
+                            amount:
+                                type: number
+                                example: 50.00
+                            description:
+                                type: string
+                                example: "Grocery Shopping"
+                            date:
+                                type: string
+                                example: "2024-10-21"
+                            balance:
+                                type: number
+                                example: 950.50
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+    /transaction/category/{id}:
+        put:
+            security:
+                - Bearer: []
+            tags:
+                - Transaction
+            summary: Update transaction category
+            description: Met à jour la catégorie d'une transaction existante
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  type: string
+                - in: body
+                  name: body
+                  description: Payload to update category
                   required: true
                   schema:
                       type: object
                       properties:
                           category:
                               type: string
+                              example: "Groceries"
             produces:
                 - application/json
             responses:
                 "200":
-                    description: OK
+                    description: Transaction category updated successfully
                     schema:
                         type: object
                         properties:
+                            id:
+                                type: string
+                                example: "tx123"
                             category:
                                 type: string
+                                example: "Groceries"
                 "401":
                     description: Unauthorized
                 "500":
                     description: Internal Server Error
     /transaction/note/{id}:
-        security:
-            - Bearer: []
-        get:
-            tags:
-                - transaction
-            summary: get transaction notes
-            description: Récupère les notes de transactions
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: OK
-                    schema:
-                        type: array
-                        items:
-                            type: string
-                "401":
-                    description: Unauthorized
-                "500":
-                    description: Internal Server Error
         put:
+            security:
+                - Bearer: []
             tags:
-                - transaction
-            summary: create transaction note
-            description: Crée une note de transaction
-            parametre:
-                - name: body
-                  in: body
-                  description: login payload
+                - Transaction
+            summary: Update transaction note
+            description: Met à jour la note d'une transaction existante
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  type: string
+                - in: body
+                  name: body
+                  description: Payload to update note
                   required: true
                   schema:
                       type: object
                       properties:
                           note:
                               type: string
+                              example: "Bought fruits and vegetables"
             produces:
                 - application/json
             responses:
                 "200":
-                    description: OK
+                    description: Transaction note updated successfully
                     schema:
                         type: object
                         properties:
+                            id:
+                                type: string
+                                example: "tx123"
                             note:
                                 type: string
+                                example: "Bought fruits and vegetables"
                 "401":
                     description: Unauthorized
                 "500":
                     description: Internal Server Error
+        delete:
+            security:
+                - Bearer: []
+            tags:
+                - Transaction
+            summary: Delete transaction note
+            description: Supprime la note d'une transaction
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Transaction note deleted successfully
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+securityDefinitions:
+    Bearer:
+        type: apiKey
+        name: Authorization
+        in: header
+definitions:
+    User:
+        properties:
+            email:
+                type: string
+                description: user email
+            password:
+                type: string
+                description: user password
+            firstName:
+                type: string
+                description: user first name
+            lastName:
+                type: string
+                description: user last name
+            userName:
+                type: string
+                description: user public name
+    Login:
+        properties:
+            email:
+                type: string
+                description: user email
+            password:
+                type: string
+                description: user password
+    ApiResponse:
+        type: object
+        properties:
+            status:
+                type: integer
+            message:
+                type: string
+            body:
+                type: object
+                properties:
+                    id:
+                        type: string
+                    email:
+                        type: string
+    LoginResponse:
+        type: object
+        properties:
+            token:
+                type: string
+    UserProfile:
+        type: object
+        properties:
+            userName:
+                type: string
+            firstName:
+                type: string
+            lastName:
+                type: string
+            email:
+                type: string
