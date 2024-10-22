@@ -99,46 +99,6 @@ paths:
                     description: Unauthorized
                 "500":
                     description: Internal Server Error
-    /account:
-        get:
-            security:
-                - Bearer: []
-            tags:
-                - Account
-            summary: Get account information
-            description: Récupère les informations des transactions d'un utilisateur connecté
-            produces:
-                - application/json
-            responses:
-                "200":
-                    description: OK
-                    schema:
-                        type: object
-                        properties:
-                            id:
-                                type: string
-                                example: "12345"
-                            balance:
-                                type: number
-                                example: 1000.50
-                            transactions:
-                                type: array
-                                items:
-                                    type: object
-                                    properties:
-                                        id:
-                                            type: string
-                                            example: "tx123"
-                                        amount:
-                                            type: number
-                                            example: 50.00
-                                        description:
-                                            type: string
-                                            example: "Grocery Shopping"
-                "401":
-                    description: Unauthorized
-                "500":
-                    description: Internal Server Error
     /transaction:
         get:
             security:
@@ -245,14 +205,30 @@ paths:
                 "200":
                     description: Transaction category updated successfully
                     schema:
-                        type: object
-                        properties:
-                            id:
-                                type: string
-                                example: "tx123"
-                            category:
-                                type: string
-                                example: "Groceries"
+                        $ref: "#/definitions/UpdateResponse"
+                "401":
+                    description: Unauthorized
+                "500":
+                    description: Internal Server Error
+        delete:
+            security:
+                - Bearer: []
+            tags:
+                - Transaction
+            summary: Delete transaction category
+            description: Supprime la catégorie d'une transaction
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  type: string
+            produces:
+                - application/json
+            responses:
+                "200":
+                    description: Transaction category deleted successfully
+                    schema:
+                        $ref: "#/definitions/UpdateResponse"
                 "401":
                     description: Unauthorized
                 "500":
@@ -286,14 +262,7 @@ paths:
                 "200":
                     description: Transaction note updated successfully
                     schema:
-                        type: object
-                        properties:
-                            id:
-                                type: string
-                                example: "tx123"
-                            note:
-                                type: string
-                                example: "Bought fruits and vegetables"
+                        $ref: "#/definitions/UpdateResponse"
                 "401":
                     description: Unauthorized
                 "500":
@@ -315,6 +284,8 @@ paths:
             responses:
                 "200":
                     description: Transaction note deleted successfully
+                    schema:
+                        $ref: "#/definitions/UpdateResponse"
                 "401":
                     description: Unauthorized
                 "500":
@@ -380,3 +351,21 @@ definitions:
                 type: string
             email:
                 type: string
+    UpdateResponse:
+        type: object
+        properties:
+            status:
+                type: integer
+                example: 200
+            message:
+                type: string
+                example: "Transaction updated successfully"
+            body:
+                type: object
+                properties:
+                    id:
+                        type: string
+                    category:
+                        type: string
+                    note:
+                        type: string
