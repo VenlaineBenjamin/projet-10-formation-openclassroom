@@ -1,16 +1,20 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+// Fonction utilitaire pour récupérer le token
+const getAuthToken = () => {
+    return localStorage.getItem("token");
+};
+
+// Thunk pour récupérer le profil utilisateur
 export const fetchUserProfile = createAsyncThunk(
     "user/fetchUserProfile",
     async (_, { rejectWithValue }) => {
         try {
-            const authToken = localStorage.getItem("token");
+            const authToken = getAuthToken();
 
             if (!authToken) {
-                return rejectWithValue({
-                    message: "Aucun jeton d'authentification trouvé",
-                });
+                return rejectWithValue("Aucun jeton d'authentification trouvé");
             }
 
             const response = await axios.get(
@@ -22,38 +26,36 @@ export const fetchUserProfile = createAsyncThunk(
                     },
                 }
             );
-            console.log(response.data.body);
+
             if (response.status === 200) {
                 return response.data.body;
             } else {
-                return rejectWithValue({
-                    message: "Le profil utilisateur est introuvable",
-                });
+                return rejectWithValue("Le profil utilisateur est introuvable");
             }
         } catch (error) {
-            console.error(
-                "Erreur lors de la récupération du profil utilisateur:",
-                error
-            );
             const message = error.response?.data?.message || "Erreur inconnue";
-            return rejectWithValue({ message });
+            return rejectWithValue(message);
         }
     }
 );
 
+// Thunk pour mettre à jour le profil utilisateur
 export const updateUserProfile = createAsyncThunk(
     "user/updateUserProfile",
     async ({ userName }, { rejectWithValue }) => {
+        // Vérification que userName n'est pas vide
+        if (!userName || userName.trim() === "") {
+            return rejectWithValue(
+                "Le nom d'utilisateur ne peut pas être vide !"
+            );
+        }
+
         try {
-            const authToken = localStorage.getItem("token");
+            const authToken = getAuthToken();
 
             if (!authToken) {
-                return rejectWithValue({
-                    message: "Aucun jeton d'authentification trouvé",
-                });
+                return rejectWithValue("Aucun jeton d'authentification trouvé");
             }
-
-            console.log("Données envoyées à l'API:", { userName });
 
             const response = await axios.put(
                 "http://localhost:3001/api/v1/user/profile",
@@ -66,27 +68,24 @@ export const updateUserProfile = createAsyncThunk(
                 }
             );
 
-            console.log("Réponse API après mise à jour:", response.data.body);
-
             if (response.status === 200) {
                 return response.data.body;
             } else {
-                return rejectWithValue({
-                    message: "La mise à jour du profil a échoué",
-                });
+                return rejectWithValue("La mise à jour du profil a échoué");
             }
         } catch (error) {
             const message = error.response?.data?.message || "Erreur inconnue";
-            return rejectWithValue({ message });
+            return rejectWithValue(message);
         }
     }
 );
 
+// Slice utilisateur
 const userSlice = createSlice({
     name: "user",
     initialState: {
         loading: false,
-        userName: localStorage.getItem("userName"),
+        userName: localStorage.getItem("userName") || "",
         firstName: "",
         lastName: "",
         error: null,
@@ -106,7 +105,8 @@ const userSlice = createSlice({
             })
             .addCase(fetchUserProfile.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload?.message || "Erreur de chargement";
+                state.error =
+                    action.payload || "Erreur de chargement du profil";
             })
             .addCase(updateUserProfile.pending, (state) => {
                 state.loading = true;
@@ -119,7 +119,8 @@ const userSlice = createSlice({
             })
             .addCase(updateUserProfile.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload?.message || "Erreur de chargement";
+                state.error =
+                    action.payload || "Erreur de mise à jour du profil";
             });
     },
 });
