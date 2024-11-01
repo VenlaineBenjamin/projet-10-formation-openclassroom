@@ -14,7 +14,8 @@ export const loginUser = createAsyncThunk(
             localStorage.setItem("token", token);
             return { token, userData };
         } catch (error) {
-            return rejectWithValue(error.response.data);
+            console.log("Erreur de l'API:", error.response?.data);
+            return rejectWithValue(error.response?.data);
         }
     }
 );
@@ -26,7 +27,7 @@ const authSlice = createSlice({
         userInfo: localStorage.getItem("userInfo")
             ? JSON.parse(localStorage.getItem("userInfo"))
             : null,
-        error: null,
+        error: null, // Assurez-vous que l'erreur soit bien définie ici
         token: localStorage.getItem("token") || null,
     },
     reducers: {
@@ -36,12 +37,14 @@ const authSlice = createSlice({
             localStorage.removeItem("token");
             localStorage.removeItem("userInfo");
             localStorage.removeItem("userName");
+            state.error = null; // Réinitialiser l'erreur lors de la déconnexion
         },
     },
     extraReducers: (builder) => {
         builder
             .addCase(loginUser.pending, (state) => {
                 state.loading = true;
+                state.error = null; // Réinitialiser l'erreur lorsque la connexion commence
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
@@ -55,7 +58,9 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload;
+                state.error =
+                    action.payload.message || "Une erreur est survenue."; // Message d'erreur par défaut
+                console.log("Erreur stockée dans l'état:", state.error);
             });
     },
 });
