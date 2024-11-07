@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Transaction from "../../components/transaction/Transaction";
+import AccountSection from "../../components/accountsection/AccountSection";
 import { updateUserProfile } from "../../features/user/userSlice";
 import "./User.css";
 
@@ -11,8 +11,8 @@ export default function User() {
     );
     const [useEdit, setUseEdit] = useState(false);
     const [newUserName, setNewUserName] = useState(userName);
-    const [localError, setLocalError] = useState(null); // État pour le message d'erreur
-    const [activeTransaction, setActiveTransaction] = useState(null); // État pour gérer la transaction active
+    const [localError, setLocalError] = useState(null);
+    const [activeTransaction, setActiveTransaction] = useState(null);
 
     useEffect(() => {
         setNewUserName(userName);
@@ -79,7 +79,6 @@ export default function User() {
                                         }
                                     />
                                 </label>
-                                {/* Affichage du message d'erreur sous le champ */}
                                 {localError && (
                                     <p className="error-message">
                                         {localError}
@@ -117,72 +116,35 @@ export default function User() {
             </header>
 
             <h2 className="sr-only">Accounts</h2>
-            <section className="account">
-                <div className="account-content-wrapper">
-                    <h3 className="account-title">
-                        Argent Bank Checking (x8349)
-                    </h3>
-                    <h4 className="account-amount">$2,082.79</h4>
-                    <p className="account-amount-description">
-                        Available Balance
-                    </p>
-                </div>
-                <div className="account-content-wrapper cta">
-                    <button
-                        className="transaction-button"
-                        onClick={() => toggleTransactionVisibility("checking")}
-                    >
-                        {activeTransaction === "checking"
-                            ? "Close panel"
-                            : "View transactions"}
-                    </button>
-                </div>
-            </section>
-            {activeTransaction === "checking" && <Transaction />}
-            <section className="account">
-                <div className="account-content-wrapper">
-                    <h3 className="account-title">
-                        Argent Bank Savings (x6712)
-                    </h3>
-                    <h4 className="account-amount">$10,928.42</h4>
-                    <p className="account-amount-description">
-                        Available Balance
-                    </p>
-                </div>
-                <div className="account-content-wrapper cta">
-                    <button
-                        className="transaction-button"
-                        onClick={() => toggleTransactionVisibility("savings")}
-                    >
-                        {activeTransaction === "savings"
-                            ? "Close panel"
-                            : "View transactions"}
-                    </button>
-                </div>
-            </section>
-            {activeTransaction === "savings" && <Transaction />}
-            <section className="account">
-                <div className="account-content-wrapper">
-                    <h3 className="account-title">
-                        Argent Bank Credit Card (x8349)
-                    </h3>
-                    <h4 className="account-amount">$184.30</h4>
-                    <p className="account-amount-description">
-                        Current Balance
-                    </p>
-                </div>
-                <div className="account-content-wrapper cta">
-                    <button
-                        className="transaction-button"
-                        onClick={() => toggleTransactionVisibility("credit")}
-                    >
-                        {activeTransaction === "credit"
-                            ? "Close panel"
-                            : "View transactions"}
-                    </button>
-                </div>
-            </section>
-            {activeTransaction === "credit" && <Transaction />}
+
+            {/* Utilisation du composant AccountSection pour chaque compte */}
+            <AccountSection
+                title="Argent Bank Checking"
+                accountNumber="x8349"
+                amount="$2,082.79"
+                description="Available Balance"
+                activeTransaction={activeTransaction}
+                onToggleTransaction={toggleTransactionVisibility}
+                transactionId="checking"
+            />
+            <AccountSection
+                title="Argent Bank Savings"
+                accountNumber="x6712"
+                amount="$10,928.42"
+                description="Available Balance"
+                activeTransaction={activeTransaction}
+                onToggleTransaction={toggleTransactionVisibility}
+                transactionId="savings"
+            />
+            <AccountSection
+                title="Argent Bank Credit Card"
+                accountNumber="x8349"
+                amount="$184.30"
+                description="Current Balance"
+                activeTransaction={activeTransaction}
+                onToggleTransaction={toggleTransactionVisibility}
+                transactionId="credit"
+            />
         </main>
     );
 }
